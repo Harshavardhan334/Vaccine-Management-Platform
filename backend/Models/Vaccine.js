@@ -7,9 +7,10 @@ const VaccineSchema = new mongoose.Schema({
   recommendedAge: { type: String, required: true },
   dosesRequired: { type: Number, required: true },
   sideEffects: [{ type: String }],
-  approved: { type: Boolean, default: false }
+  approved: { type: Boolean, default: false },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 }, { timestamps: true });
 
 const Vaccine = mongoose.model("Vaccine", VaccineSchema);
-
 export default Vaccine;
