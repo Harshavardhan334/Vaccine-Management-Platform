@@ -8,7 +8,7 @@ export const getVaccinesByLocation = async (req, res) => {
       const { location } = req.params;
   
       // Fetch diseases associated with the location
-      const diseases = await Disease.find({ locations: location });
+      const diseases = await Disease.find({ affectedAreas: location });
   
       if (diseases.length === 0) {
         return res.status(404).json({ message: "No diseases found for this location" });
