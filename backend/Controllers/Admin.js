@@ -1,6 +1,8 @@
 import User from "../Models/User.js";
 import Vaccine from "../Models/Vaccine.js";
 import Disease from "../Models/Disease.js";
+import VaccineRequest from "../Models/vaccineReq.js";
+import DiseaseRequest from "../Models/diseaseReq.js";
 
 // Add a new vaccine
 export const addVaccine = async (req, res) => {
@@ -19,11 +21,38 @@ export const addVaccine = async (req, res) => {
       dosesRequired,
       sideEffects,
       createdBy: req.user._id,
-      approved: true
+      approvedBy: req.user._id,
     });
 
     await vaccine.save();
     res.status(201).json({ message: "Vaccine added. Pending approval.", vaccine });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Add a new disease
+export const addDisease = async (req, res) => {
+  try {
+    const { name, description, affectedAreas } = req.body;
+
+    // Check if the disease already exists
+    const existingDisease = await Disease.findOne({ name });
+    if (existingDisease) {
+      return res.status(400).json({ message: "Disease already exists" });
+    }
+    // Create a new disease
+    const newDisease = new Disease({
+      name,
+      description,
+      affectedAreas,
+      createdBy: req.user._id,
+      approvedBy: req.user._id,
+    });
+
+
+    await newDisease.save();
+    res.status(201).json(newDisease);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -54,18 +83,52 @@ export const deleteUser = async (req, res) => {
 // Approve a vaccine
 export const approveVaccine = async (req, res) => {
   try {
-    const vaccine = await Vaccine.findById(req.params.id);
-    if (!vaccine) return res.status(404).json({ message: "Vaccine not found" });
+    const vaccineReq = await VaccineRequest.findById(req.params.id);
+    if (!vaccineReq) return res.status(404).json({ message: "Vaccine request not found" });
 
-    vaccine.approved = true;
-    vaccine.approvedBy = req.user._id;
-    await vaccine.save();
+    const { name, description, diseasesCovered, recommendedAge, dosesRequired, sideEffects } = vaccineReq;
 
-    res.status(200).json({ message: "Vaccine approved", vaccine });
+    // Check if a vaccine with the same name exists
+    const existingVaccine = await Vaccine.findOne({ name });
+
+    if (existingVaccine) {
+      // Find diseases that are not already covered in the existing vaccine
+      const newDiseases = diseasesCovered.filter(
+        disease => !existingVaccine.diseasesCovered.includes(disease)
+      );
+
+      if (newDiseases.length === 0) {
+        return res.status(400).json({ message: "Vaccine already covers these diseases" });
+      }
+
+      // Update the existing vaccine with new diseases
+      existingVaccine.diseasesCovered.push(...newDiseases);
+      await existingVaccine.save();
+      await vaccineReq.remove();
+      return res.status(200).json({ message: "Vaccine updated with new diseases", vaccine: existingVaccine });
+    }
+
+    // If vaccine doesn't exist, create a new one
+    const newVaccine = new Vaccine({
+      name,
+      description,
+      diseasesCovered,
+      recommendedAge,
+      dosesRequired,
+      sideEffects,
+      createdBy: vaccineReq.createdBy,
+      approvedBy: req.user._id,
+    });
+
+    await newVaccine.save();
+    await vaccineReq.remove();
+
+    res.status(200).json({ message: "Vaccine approved", vaccine: newVaccine });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
 
 // Delete a vaccine
 export const deleteVaccine = async (req, res) => {
@@ -82,17 +145,49 @@ export const deleteVaccine = async (req, res) => {
 // Approve a disease
 export const approveDisease = async (req, res) => {
   try {
-    const disease = await Disease.findById(req.params.id);
-    if (!disease) return res.status(404).json({ message: "Disease not found" });
+    const diseaseReq = await DiseaseRequest.findById(req.params.id);
+    if (!diseaseReq) return res.status(404).json({ message: "Disease request not found" });
 
-    disease.approvedBy = req.user._id;
-    await disease.save();
+    const { name, description, affectedAreas } = diseaseReq;
 
-    res.status(200).json({ message: "Disease approved", disease });
+    // Check if a disease with the same name exists
+    const existingDisease = await Disease.findOne({ name });
+
+    if (existingDisease) {
+      // Find affected areas that are not already covered
+      const newAffectedAreas = affectedAreas.filter(
+        area => !existingDisease.affectedAreas.includes(area)
+      );
+
+      if (newAffectedAreas.length === 0) {
+        return res.status(400).json({ message: "Disease already covers these affected areas" });
+      }
+
+      // Update the existing disease with new affected areas
+      existingDisease.affectedAreas.push(...newAffectedAreas);
+      await existingDisease.save();
+      await diseaseReq.remove();
+      return res.status(200).json({ message: "Disease updated with new affected areas", disease: existingDisease });
+    }
+
+    // If disease doesn't exist, create a new one
+    const newDisease = new Disease({
+      name,
+      description,
+      affectedAreas,
+      createdBy: diseaseReq.createdBy,
+      approvedBy: req.user._id,
+    });
+
+    await newDisease.save();
+    await diseaseReq.remove();
+
+    res.status(200).json({ message: "Disease approved", disease: newDisease });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
 
 // Assign locations to a disease
 export const assignLocationsToDisease = async (req, res) => {
@@ -118,6 +213,63 @@ export const deleteDisease = async (req, res) => {
     if (!disease) return res.status(404).json({ message: "Disease not found" });
 
     res.status(200).json({ message: "Disease deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+//edit disease
+export const editDisease = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, affectedAreas } = req.body;
+
+    const disease = await Disease.findById(id);
+    if (!disease) return res.status(404).json({ message: "Disease not found" });
+
+    if (name) disease.name = name;
+    if (description) disease.description = description;
+    if (affectedAreas) {
+      disease.affectedAreas = [...new Set([...disease.affectedAreas, ...affectedAreas])];
+    }
+
+    await disease.save();
+    res.status(200).json({ message: "Disease updated", disease });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+//edit vaccine
+export const editVaccine = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, diseasesCovered, recommendedAge, dosesRequired, sideEffects } = req.body;
+
+    const vaccine = await Vaccine.findById(id);
+    if (!vaccine) return res.status(404).json({ message: "Vaccine not found" });
+
+    if (name) vaccine.name = name;
+    if (description) vaccine.description = description;
+    if (recommendedAge) vaccine.recommendedAge = recommendedAge;
+    if (dosesRequired) vaccine.dosesRequired = dosesRequired;
+    if (sideEffects) vaccine.sideEffects = sideEffects;
+
+    if (diseasesCovered) {
+      // Ensure diseases are valid
+      const validDiseases = await Disease.find({ _id: { $in: diseasesCovered }, approved: true });
+      const validDiseaseIds = validDiseases.map(d => d._id);
+
+      if (validDiseaseIds.length === 0) {
+        return res.status(400).json({ message: "No valid diseases found" });
+      }
+
+      vaccine.diseasesCovered = [...new Set([...vaccine.diseasesCovered, ...validDiseaseIds])];
+    }
+
+    await vaccine.save();
+    res.status(200).json({ message: "Vaccine updated", vaccine });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

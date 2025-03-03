@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const VaccineSchema = new mongoose.Schema({
+const VaccineRequestSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   description: { type: String, required: true },
   diseasesCovered: [{ type: mongoose.Schema.Types.ObjectId, ref: "Disease" }],
@@ -8,8 +8,7 @@ const VaccineSchema = new mongoose.Schema({
   dosesRequired: { type: Number, required: true },
   sideEffects: [{ type: String }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 }, { timestamps: true });
 
-const Vaccine = mongoose.model("Vaccine", VaccineSchema);
-export default Vaccine;
+const VaccineRequest = mongoose.model("VaccineRequest", VaccineRequestSchema);
+export default VaccineRequest;

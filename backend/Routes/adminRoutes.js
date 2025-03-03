@@ -1,4 +1,5 @@
 import express from "express";
+import { isAuthenticated, authorizeRoles } from "../Middlewares/auth.js";
 import {
   addVaccine,
   getAllUsers,
@@ -11,6 +12,9 @@ import {
 } from "../Controllers/Admin.js";
 
 const router = express.Router();
+
+// Protect all admin routes (Only logged-in users with "admin" role can access)
+router.use(isAuthenticated, authorizeRoles("admin"));
 
 // Route to add a new vaccine
 router.post("/vaccines", addVaccine);
