@@ -13,13 +13,13 @@ A full-stack **MERN** application for efficient disease and vaccine tracking, fe
 ## **Tech Stack**
 - **Frontend**: React.js, Tailwind CSS
 - **Backend**: Node.js, Express.js
-- **Database**: PostgreSQL
+- **Database**: MongoDB
 - **Authentication**: JWT, bcrypt
 
 ## **Installation**
 ### **Prerequisites**
 - Node.js
-- PostgreSQL
+- MongoDB
 
 ### **Steps**
 1. Clone the repository:
@@ -35,7 +35,7 @@ A full-stack **MERN** application for efficient disease and vaccine tracking, fe
    ```env
    PORT=4000
    FRONTEND_URL=http://localhost:5173
-   POSTGRES_URI=your_postgres_connection_string
+   MONGO_URI=your_mongodb_connection_string
    JWT_SECRET_KEY=your_secret_key
    JWT_EXPIRE=10d
    COOKIE_EXPIRE=5
@@ -44,6 +44,7 @@ A full-stack **MERN** application for efficient disease and vaccine tracking, fe
    ```bash
    npm start
    ```
+
 
 ## **Contributing**
 Contributions are welcome! Please open an issue or submit a pull request.
