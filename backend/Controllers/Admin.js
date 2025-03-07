@@ -36,20 +36,23 @@ export const addDisease = async (req, res) => {
   try {
     const { name, description, affectedAreas } = req.body;
 
-    // Check if the disease already exists
-    const existingDisease = await Disease.findOne({ name });
+    // Check if the disease already exists with the same affected areas
+    const existingDisease = await Disease.findOne({
+      name,
+      affectedAreas: { $all: affectedAreas }
+    });
+
     if (existingDisease) {
-      return res.status(400).json({ message: "Disease already exists" });
+      return res.status(400).json({ message: "Disease with the same affected areas already exists" });
     }
-    // Create a new disease
+
+    // Create a new disease request
     const newDisease = new Disease({
       name,
       description,
       affectedAreas,
       createdBy: req.user._id,
-      approvedBy: req.user._id,
     });
-
 
     await newDisease.save();
     res.status(201).json(newDisease);
@@ -270,6 +273,47 @@ export const editVaccine = async (req, res) => {
 
     await vaccine.save();
     res.status(200).json({ message: "Vaccine updated", vaccine });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+// Get all vaccine requests
+export const getVaccineRequests = async (req, res) => {
+  try {
+    const vaccineRequests = await VaccineRequest.find();
+    res.status(200).json(vaccineRequests);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+// Get all disease requests
+export const getDiseaseRequests = async (req, res) => {
+  try {
+    const diseaseRequests = await DiseaseRequest.find();
+    res.status(200).json(diseaseRequests);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
+
+// Get all diseases
+export const getAllDiseases = async (req, res) => {
+  try {
+    const diseases = await Disease.find();
+    res.status(200).json(diseases);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Get all vaccines
+export const getAllVaccines = async (req, res) => {
+  try {
+    const vaccines = await Vaccine.find();
+    res.status(200).json(vaccines);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

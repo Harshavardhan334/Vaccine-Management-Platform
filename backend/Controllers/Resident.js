@@ -1,4 +1,3 @@
-import User from "../Models/User.js";
 import Vaccine from "../Models/Vaccine.js";
 import Disease from "../Models/Disease.js";
 import VaccineRequest from "../Models/vaccineReq.js";
@@ -33,7 +32,7 @@ export const getVaccinesByLocation = async (req, res) => {
   };
 
 // Add a new disease
-export const addDisease = async (req, res) => {
+export const addDiseaseReq = async (req, res) => {
   try {
     const { name, description, affectedAreas } = req.body;
 
@@ -64,7 +63,7 @@ export const addDisease = async (req, res) => {
 
 
 // Add a new vaccine
-export const addVaccine = async (req, res) => {
+export const addVaccineReq = async (req, res) => {
   try {
     const { name, description, diseasesCovered, recommendedAge, dosesRequired, sideEffects } = req.body;
 
@@ -100,6 +99,17 @@ export const addVaccine = async (req, res) => {
 
     await newVaccine.save();
     res.status(201).json(newVaccine);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+// Get all diseases
+export const getAllDiseases = async (req, res) => {
+  try {
+    const diseases = await Disease.find();
+    res.status(200).json(diseases);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

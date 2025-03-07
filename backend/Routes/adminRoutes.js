@@ -8,7 +8,8 @@ import {
   deleteVaccine,
   approveDisease,
   assignLocationsToDisease,
-  deleteDisease
+  deleteDisease,
+  addDisease,
 } from "../Controllers/Admin.js";
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.use(isAuthenticated, authorizeRoles("admin"));
 
 // Route to add a new vaccine
 router.post("/vaccines", addVaccine);
+
+// Route to add a new disease
+router.post("/diseases", addDisease);
 
 // Route to approve a vaccine
 router.put("/vaccines/approve/:id", approveVaccine);
