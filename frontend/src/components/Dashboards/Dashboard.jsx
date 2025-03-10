@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { ChevronRight, ChevronDown, LogOut, User, Pencil } from "lucide-react";
+import { ChevronRight, ChevronDown, LogOut, User, Pencil, RollerCoaster } from "lucide-react";
 
-const ResidentDashboard = () => {
+const Dashboard = () => {
   const [formData, setFormData] = useState({
     name: "Sample",
     email: "sample@gmail.com",
     mobile: "1231231231",
     location: "USA",
+    role: "Resident",
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -20,6 +21,7 @@ const ResidentDashboard = () => {
           email: data.email || "",
           mobile: data.mobile || "Add number",
           location: data.location || "USA",
+          role: data.role || "Resident",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -101,6 +103,12 @@ const ResidentDashboard = () => {
                 <button className="flex items-center gap-2 text-gray-500 text-sm">
                   <span>Eng</span>
                   <ChevronDown size={16} />
+                </button>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Role</span>
+                <button className="flex items-center gap-2 text-gray-500 text-sm">
+                  <span>{formData.role}</span>
                 </button>
               </div>
             </div>
@@ -198,4 +206,4 @@ const ResidentDashboard = () => {
   );
 };
 
-export default ResidentDashboard;
+export default Dashboard;
