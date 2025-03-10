@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronRight, ChevronDown, LogOut, User, Pencil, RollerCoaster } from "lucide-react";
+import { ChevronRight, ChevronDown, LogOut, User, Pencil } from "lucide-react";
 
 const Dashboard = () => {
   const [formData, setFormData] = useState({
