@@ -89,7 +89,7 @@ const VaccineForm = () => {
         placeholder="Doses Required"
         value={formData.dosesRequired}
         onChange={handleChange}
-        className="border p-2 w-full rounded"
+        className="border p-2 w-full rounded text-black"
         required
       />
       <input
