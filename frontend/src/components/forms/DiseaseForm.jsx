@@ -1,6 +1,7 @@
 // src/components/forms/DiseaseForm.jsx
 import React, { useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../../config.js";
 import Notification from "../Notification.jsx";
 
 const DiseaseForm = ({ mode = 'resident' }) => {
@@ -22,7 +23,7 @@ const DiseaseForm = ({ mode = 'resident' }) => {
     setSubmitting(true);
 
     try {
-      const base = mode === 'admin' ? 'http://localhost:4000/api/admin' : 'http://localhost:4000/api/resident';
+      const base = mode === 'admin' ? `${BACKEND_URL}/api/admin` : `${BACKEND_URL}/api/resident`;
       await axios.post(`${base}/diseases`, {
         name: formData.name,
         description: formData.description,

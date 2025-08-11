@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../config.js";
 
 const AuthContext = createContext(null);
 
@@ -24,7 +25,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const res = await axios.post(
-      "http://localhost:4000/api/users/login",
+      `${BACKEND_URL}/api/users/login`,
       { email, password },
       { withCredentials: true }
     );
@@ -33,7 +34,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const register = async (payload) => {
-    const res = await axios.post("http://localhost:4000/api/users", payload, {
+    const res = await axios.post(`${BACKEND_URL}/api/users`, payload, {
       withCredentials: true,
     });
     setUser(res.data.user);
@@ -41,7 +42,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:4000/api/users/logout", {}, {
+    await axios.post(`${BACKEND_URL}/api/users/logout`, {}, {
       withCredentials: true,
     });
     setUser(null);

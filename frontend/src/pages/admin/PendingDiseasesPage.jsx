@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { BACKEND_URL } from '../../config.js'
 import AdminNavbar from '../../components/navs/AdminNavbar.jsx'
 
 const PendingDiseasesPage = () => {
   const [requests, setRequests] = useState([])
 
   const fetchRequests = async () => {
-    const res = await axios.get('http://localhost:4000/api/admin/diseases/requests', { withCredentials: true })
+    const res = await axios.get(`${BACKEND_URL}/api/admin/diseases/requests`, { withCredentials: true })
     setRequests(res.data)
   }
 
   const approve = async (id) => {
-    await axios.put(`http://localhost:4000/api/admin/diseases/approve/${id}`, {}, { withCredentials: true })
+    await axios.put(`${BACKEND_URL}/api/admin/diseases/approve/${id}`, {}, { withCredentials: true })
     fetchRequests()
   }
 

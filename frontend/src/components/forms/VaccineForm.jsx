@@ -1,6 +1,7 @@
 // src/components/forms/VaccineForm.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../../config.js";
 import Notification from "../Notification.jsx";
 
 const VaccineForm = ({ mode = 'resident' }) => {
@@ -21,7 +22,7 @@ const VaccineForm = ({ mode = 'resident' }) => {
   useEffect(() => {
     const fetchDiseases = async () => {
       try {
-        const base = mode === 'admin' ? 'http://localhost:4000/api/admin' : 'http://localhost:4000/api/resident';
+        const base = mode === 'admin' ? `${BACKEND_URL}/api/admin` : `${BACKEND_URL}/api/resident`;
         const res = await axios.get(`${base}/diseases`, { withCredentials: true });
         setDiseases(res.data || []);
       } catch (e) {
@@ -59,7 +60,7 @@ const VaccineForm = ({ mode = 'resident' }) => {
     setSubmitting(true);
 
     try {
-      const base = mode === 'admin' ? 'http://localhost:4000/api/admin' : 'http://localhost:4000/api/resident';
+      const base = mode === 'admin' ? `${BACKEND_URL}/api/admin` : `${BACKEND_URL}/api/resident`;
       const diseaseIdsOrNames = mode === 'admin'
         ? selectedDiseaseNames
             .map(name => diseases.find(d => d.name?.toLowerCase() === name.toLowerCase())?._id)

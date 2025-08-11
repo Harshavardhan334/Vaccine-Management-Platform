@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
+import { BACKEND_URL } from '../../config.js'
 import AdminNavbar from '../../components/navs/AdminNavbar.jsx'
 import VaccineForm from '../../components/forms/VaccineForm.jsx'
 import DiseaseForm from '../../components/forms/DiseaseForm.jsx'
@@ -14,9 +15,9 @@ const AdminDashboard = () => {
       setLoading(true)
       setError('')
       const [usersRes, vaccinesRes, diseasesRes] = await Promise.all([
-        axios.get('http://localhost:4000/api/admin/users', { withCredentials: true }),
-        axios.get('http://localhost:4000/api/admin/vaccines', { withCredentials: true }),
-        axios.get('http://localhost:4000/api/admin/diseases', { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/admin/users`, { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/admin/vaccines`, { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/admin/diseases`, { withCredentials: true }),
       ])
       setStats({
         users: Array.isArray(usersRes.data) ? usersRes.data.length : 0,

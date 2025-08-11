@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
+import { BACKEND_URL } from '../../config.js'
 import AdminNavbar from '../../components/navs/AdminNavbar.jsx'
 import { useLocation } from 'react-router-dom'
 
@@ -17,8 +18,8 @@ const RequestsPage = () => {
     try {
       setLoading(true)
       const [vaccinesRes, diseasesRes] = await Promise.all([
-        axios.get('http://localhost:4000/api/admin/vaccines/requests', { withCredentials: true }),
-        axios.get('http://localhost:4000/api/admin/diseases/requests', { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/admin/vaccines/requests`, { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/admin/diseases/requests`, { withCredentials: true }),
       ])
       setVaccineRequests(vaccinesRes.data)
       setDiseaseRequests(diseasesRes.data)
@@ -32,7 +33,7 @@ const RequestsPage = () => {
     setErrorMessage("")
     setApprovingVaccineIds(prev => new Set(prev).add(id))
     try {
-      await axios.put(`http://localhost:4000/api/admin/vaccines/approve/${id}`, {}, { withCredentials: true })
+      await axios.put(`${BACKEND_URL}/api/admin/vaccines/approve/${id}`, {}, { withCredentials: true })
       await fetchAll()
     } catch (err) {
       setErrorMessage(err.response?.data?.message || "Failed to approve vaccine")
@@ -50,7 +51,7 @@ const RequestsPage = () => {
     setErrorMessage("")
     setApprovingDiseaseIds(prev => new Set(prev).add(id))
     try {
-      await axios.put(`http://localhost:4000/api/admin/diseases/approve/${id}`, {}, { withCredentials: true })
+      await axios.put(`${BACKEND_URL}/api/admin/diseases/approve/${id}`, {}, { withCredentials: true })
       await fetchAll()
     } catch (err) {
       setErrorMessage(err.response?.data?.message || "Failed to approve disease")

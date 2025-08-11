@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { BACKEND_URL } from '../../config.js';
 
 const SearchBar = ({ setVaccines, setDiseases, mode = 'resident' }) => {
   const [search, setSearch] = useState('');
@@ -8,7 +9,7 @@ const SearchBar = ({ setVaccines, setDiseases, mode = 'resident' }) => {
     if (search.trim() === '') return;
 
     try {
-      const base = mode === 'admin' ? 'http://localhost:4000/api/admin' : 'http://localhost:4000/api/resident';
+      const base = mode === 'admin' ? `${BACKEND_URL}/api/admin` : `${BACKEND_URL}/api/resident`;
       const response = await axios.get(`${base}/vaccines/location/${encodeURIComponent(search)}`, { withCredentials: true });
       const data = response.data;
       const vaccines = Array.isArray(data?.vaccines) ? data.vaccines : [];

@@ -31,7 +31,7 @@ const Dashboard = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:4000/api/users", {
+      const response = await fetch("/api/users", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
