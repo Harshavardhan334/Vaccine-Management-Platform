@@ -1,54 +1,69 @@
-# **Vaccine Management Platform**
+# Vaccine Management Platform
 
-## **Overview**
-A full-stack **MERN** application for efficient disease and vaccine tracking, featuring user role management, approval workflows, and secure data handling.
+Full-stack MERN app for disease and vaccine tracking with role-based access (Resident/Admin), approval workflows, and cookie-based JWT auth.
 
-## **Features**
-- **User Authentication & Security**: Implements **bcrypt** for password hashing and role-based access control (Admin, Resident).
-- **Disease & Vaccine Management**: Tracks **10,000+ records**, allowing approval, updates, and deletion of diseases and vaccines.
-- **Approval Workflows**: Handles **500+ approval requests** monthly, ensuring only verified data is added.
-- **RESTful APIs**: Designed for managing vaccines, diseases, and users, enabling seamless data access and integration.
-- **Data Integrity & Accuracy**: Ensures **99.9% data accuracy** with validation checks and access restrictions.
+## Features
+- Auth and roles: Resident and Admin, cookie JWT, protected routes
+- Resident
+  - Submit disease and vaccine requests
+  - Search vaccines by location
+- Admin
+  - Review/approve disease and vaccine requests
+  - Manage diseases (affected areas) and vaccines (covered diseases)
 
-## **Tech Stack**
-- **Frontend**: React.js, Tailwind CSS
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **Authentication**: JWT, bcrypt
+## Tech Stack
+- Frontend: React, React Router, Tailwind CSS, Axios, Vite
+- Backend: Node, Express, Mongoose, CORS, cookie-parser, dotenv, JWT
+- DB: MongoDB
 
-## **Installation**
-### **Prerequisites**
-- Node.js
-- MongoDB
+## Local Setup
+Prereqs: Node 18+, MongoDB Atlas URI
 
-### **Steps**
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/vaccine-management.git
-   cd vaccine-management
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up environment variables in a `.env` file:
-   ```env
-   PORT=4000
-   FRONTEND_URL=http://localhost:5173
-   MONGO_URI=your_mongodb_connection_string
-   JWT_SECRET_KEY=your_secret_key
-   JWT_EXPIRE=10d
-   COOKIE_EXPIRE=5
-   ```
-4. Run the backend server:
-   ```bash
-   npm start
-   ```
+1) Backend
+```bash
+cd backend
+npm install
+cp config/config.env.example config/config.env # or set your own values
+npm run dev
+```
 
+Required `backend/config/config.env` values:
+```
+PORT=4000
+FRONTEND_URL=http://localhost:5173
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET_KEY=your_secret_key
+JWT_EXPIRE=10d
+COOKIE_EXPIRE=5
+```
 
-## **Contributing**
-Contributions are welcome! Please open an issue or submit a pull request.
+2) Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## **License**
-This project is licensed under the MIT License.
+Open `http://localhost:5173` in your browser.
+
+## API Overview (selected)
+- Users: `POST /api/users` (register), `POST /api/users/login`, `POST /api/users/logout`, `PUT /api/users` (self update)
+- Resident (auth, role resident):
+  - `POST /api/resident/diseases` (request)
+  - `POST /api/resident/vaccines` (request)
+  - `GET /api/resident/vaccines/location/:location` (search)
+- Admin (auth, role admin):
+  - Requests: `GET /api/admin/diseases/requests`, `PUT /api/admin/diseases/approve/:id`
+  - Requests: `GET /api/admin/vaccines/requests`, `PUT /api/admin/vaccines/approve/:id`
+  - Manage: `PUT /api/admin/diseases/:id`, `PUT /api/admin/vaccines/:id`
+
+## Scripts
+- Backend: `npm run dev` (nodemon), `npm start`
+- Frontend: `npm run dev`, `npm run build`, `npm run preview`
+
+## Contributing
+PRs are welcome. Please open an issue to discuss significant changes.
+
+## License
+MIT
 
