@@ -22,6 +22,7 @@ export const addVaccine = async (req, res) => {
       sideEffects,
       createdBy: req.user._id,
       approvedBy: req.user._id,
+      approved: true,
     });
 
     await vaccine.save();
@@ -52,6 +53,8 @@ export const addDisease = async (req, res) => {
       description,
       affectedAreas,
       createdBy: req.user._id,
+      approvedBy: req.user._id,
+      approved: true,
     });
 
     await newDisease.save();
@@ -121,6 +124,7 @@ export const approveVaccine = async (req, res) => {
       sideEffects,
       createdBy: vaccineReq.createdBy,
       approvedBy: req.user._id,
+      approved: true,
     });
 
     await newVaccine.save();
@@ -180,6 +184,7 @@ export const approveDisease = async (req, res) => {
       affectedAreas,
       createdBy: diseaseReq.createdBy,
       approvedBy: req.user._id,
+      approved: true,
     });
 
     await newDisease.save();
@@ -200,7 +205,9 @@ export const assignLocationsToDisease = async (req, res) => {
 
     if (!disease) return res.status(404).json({ message: "Disease not found" });
 
-    disease.locations = locations;
+    const areasToAdd = Array.isArray(locations) ? locations : [];
+    const merged = [...new Set([...(disease.affectedAreas || []), ...areasToAdd])];
+    disease.affectedAreas = merged;
     await disease.save();
 
     res.status(200).json({ message: "Locations assigned", disease });

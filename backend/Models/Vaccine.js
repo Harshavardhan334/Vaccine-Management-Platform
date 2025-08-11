@@ -8,7 +8,8 @@ const VaccineSchema = new mongoose.Schema({
   dosesRequired: { type: Number, required: true },
   sideEffects: [{ type: String }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  approved: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const Vaccine = mongoose.model("Vaccine", VaccineSchema);

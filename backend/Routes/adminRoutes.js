@@ -10,6 +10,12 @@ import {
   assignLocationsToDisease,
   deleteDisease,
   addDisease,
+  editDisease,
+  editVaccine,
+  getVaccineRequests,
+  getDiseaseRequests,
+  getAllDiseases,
+  getAllVaccines,
 } from "../Controllers/Admin.js";
 
 const router = express.Router();
@@ -29,6 +35,9 @@ router.put("/vaccines/approve/:id", approveVaccine);
 // Route to delete a vaccine
 router.delete("/vaccines/:id", deleteVaccine);
 
+// Route to edit a vaccine
+router.put("/vaccines/:id", editVaccine);
+
 // Route to get all users (admin-only)
 router.get("/users", getAllUsers);
 
@@ -43,5 +52,16 @@ router.put("/diseases/locations/:id", assignLocationsToDisease);
 
 // Route to delete a disease
 router.delete("/diseases/:id", deleteDisease);
+
+// Route to edit a disease
+router.put("/diseases/:id", editDisease);
+
+// Routes to fetch pending requests
+router.get("/vaccines/requests", getVaccineRequests);
+router.get("/diseases/requests", getDiseaseRequests);
+
+// Optional: Routes to fetch all approved entities
+router.get("/vaccines", getAllVaccines);
+router.get("/diseases", getAllDiseases);
 
 export default router;

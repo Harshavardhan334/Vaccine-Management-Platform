@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(isAuthenticated, authorizeRoles("resident"));
 
 // Route to get vaccines by location (based on diseases at that location)
-router.post("/vaccines/location", getVaccinesByLocation);
+router.get("/vaccines/location/:location", getVaccinesByLocation);
 
 // Route to add a new disease request
 router.post("/diseases", addDiseaseReq);

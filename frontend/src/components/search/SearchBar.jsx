@@ -8,7 +8,7 @@ const SearchBar = ({ setVaccines }) => {
     if (search.trim() === '') return;
 
     try {
-      const response = await axios.get(`http://localhost:4000/api/resident/vaccines/location/${search}`);
+      const response = await axios.get(`http://localhost:4000/api/resident/vaccines/location/${encodeURIComponent(search)}`, { withCredentials: true });
       console.log("Fetched Data:", response.data);
 
       setVaccines(Array.isArray(response.data) ? response.data : [response.data]);

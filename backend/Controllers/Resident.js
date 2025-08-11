@@ -6,7 +6,7 @@ import DiseaseRequest from "../Models/diseaseReq.js";
 // Get vaccines according to diseases at a specific location
 export const getVaccinesByLocation = async (req, res) => {
     try {
-      const { location } = req.body;
+      const { location } = req.method === 'GET' ? req.params : req.body;
   
       // Fetch diseases associated with the location
       const diseases = await Disease.find({ affectedAreas: location, approved: true});
