@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SearchBar from '../../components/search/SearchBar';
 import VaccineList from '../../components/search/VaccineList';
-import ResidentNavbar from '../../components/navs/ResidentNavbar';
+import RoleNavbar from '../../components/navs/RoleNavbar.jsx';
 
 const SearchPage = () => {
   const [vaccines, setVaccines] = useState([]);
@@ -9,7 +9,7 @@ const SearchPage = () => {
   return (<>
   
   
-      <ResidentNavbar/>
+      <RoleNavbar/>
     <div className='h-screen bg-black text-white flex-col  justify-center items-center '>
       <SearchBar setVaccines={setVaccines} />
       <VaccineList vaccines={vaccines} />

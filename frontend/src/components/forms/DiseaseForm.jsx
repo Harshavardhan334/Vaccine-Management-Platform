@@ -1,13 +1,13 @@
 // src/components/forms/DiseaseForm.jsx
 import React, { useState } from "react";
 import axios from "axios";
-// import Notification from "frontend/src/components/Notification.jsx";
+import Notification from "../Notification.jsx";
 
 const DiseaseForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    locations: ""
+    affectedAreas: ""
   });
   const [message, setMessage] = useState({ type: "", text: "" });
 
@@ -23,13 +23,13 @@ const DiseaseForm = () => {
       await axios.post("http://localhost:4000/api/resident/diseases", {
         name: formData.name,
         description: formData.description,
-        locations: formData.locations.split(",").map(item => item.trim())
+        affectedAreas: formData.affectedAreas.split(",").map(item => item.trim())
       }, { withCredentials: true });
       setMessage({ type: "success", text: "Disease submitted successfully! Waiting for admin approval." });
       setFormData({
         name: "",
         description: "",
-        locations: ""
+        affectedAreas: ""
       });
     } catch (error) {
       setMessage({ type: "error", text: error.response?.data?.message || "Submission failed." });
@@ -58,9 +58,9 @@ const DiseaseForm = () => {
       />
       <input
         type="text"
-        name="locations"
-        placeholder="Affected Locations (comma separated)"
-        value={formData.locations}
+        name="affectedAreas"
+        placeholder="Affected Areas (comma separated)"
+        value={formData.affectedAreas}
         onChange={handleChange}
         className="border p-2 w-full rounded"
         required

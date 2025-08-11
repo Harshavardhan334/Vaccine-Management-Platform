@@ -1,33 +1,27 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../Auth.jsx";
 import { ChevronRight, ChevronDown, LogOut, User, Pencil } from "lucide-react";
 
-const ResidentDashboard = () => {
+const Dashboard = () => {
+  const { user, setUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: "Sample",
-    email: "sample@gmail.com",
-    mobile: "1231231231",
-    location: "USA",
+    name: user?.name || "",
+    email: user?.email || "",
+    mobile: user?.mobile || "",
+    location: "",
+    role: user?.role || "resident",
   });
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("");
-        const data = await response.json();
-        setFormData({
-          name: data.name || "",
-          email: data.email || "",
-          mobile: data.mobile || "Add number",
-          location: data.location || "USA",
-        });
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+    setFormData(prev => ({
+      ...prev,
+      name: user?.name || "",
+      email: user?.email || "",
+      mobile: user?.mobile || "",
+      role: user?.role || "resident",
+    }));
+  }, [user]);
 
   const handleEditToggle = () => setIsEditing((prev) => !prev);
 
@@ -37,13 +31,15 @@ const ResidentDashboard = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("/api/user/update", {
-        method: "POST",
+      const response = await fetch("http://localhost:4000/api/users", {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        credentials: "include",
+        body: JSON.stringify({ name: formData.name, email: formData.email, password: '' }),
       });
-
       if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
         setIsEditing(false);
       }
     } catch (error) {
@@ -101,6 +97,12 @@ const ResidentDashboard = () => {
                 <button className="flex items-center gap-2 text-gray-500 text-sm">
                   <span>Eng</span>
                   <ChevronDown size={16} />
+                </button>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm">Role</span>
+                <button className="flex items-center gap-2 text-gray-500 text-sm">
+                  <span>{formData.role}</span>
                 </button>
               </div>
             </div>
@@ -198,4 +200,4 @@ const ResidentDashboard = () => {
   );
 };
 
-export default ResidentDashboard;
+export default Dashboard;

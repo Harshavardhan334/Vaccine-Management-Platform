@@ -5,7 +5,8 @@ const DiseaseSchema = new mongoose.Schema({
   description: { type: String, required: true },
   affectedAreas: [{ type: String }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
+  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  approved: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const Disease = mongoose.model("Disease", DiseaseSchema);

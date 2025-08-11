@@ -3,6 +3,7 @@ import { dbConnection } from "./Database/dbConnection.js";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { errorMiddleware } from "./Middlewares/error.js";
 
 import userRoutes from "./Routes/userRoutes.js";  // Import user routes
 import adminRoutes from "./Routes/adminRoutes.js";  // Import admin routes
@@ -34,6 +35,9 @@ dbConnection();
 app.use("/api/users", userRoutes);  // User-related routes
 app.use("/api/admin", adminRoutes);  // Admin-related routes
 app.use("/api/resident", residentRoutes);  // Resident-related routes
+
+// Error middleware
+app.use(errorMiddleware);
 
 // Export the app for use in server setup
 export default app;
