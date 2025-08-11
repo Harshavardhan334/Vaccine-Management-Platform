@@ -289,8 +289,25 @@ export const editVaccine = async (req, res) => {
 // Get all vaccine requests
 export const getVaccineRequests = async (req, res) => {
   try {
-    const vaccineRequests = await VaccineRequest.find();
-    res.status(200).json(vaccineRequests);
+    const requests = await VaccineRequest.find();
+
+    // Filter out requests that are effectively already approved (same-name vaccine covering all diseases)
+    const escapeRegExp = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const pending = [];
+    for (const r of requests) {
+      const nameRegex = new RegExp(`^${escapeRegExp(r.name)}$`, 'i');
+      const existing = await Vaccine.findOne({ name: nameRegex });
+      if (!existing) {
+        pending.push(r);
+        continue;
+      }
+      // If all requested diseases are already covered, treat as approved-equivalent → skip
+      const coversAll = r.diseasesCovered.every(id => existing.diseasesCovered.map(String).includes(String(id)));
+      if (!coversAll) pending.push(r);
+    }
+
+    res.status(200).json(pending);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -299,8 +316,24 @@ export const getVaccineRequests = async (req, res) => {
 // Get all disease requests
 export const getDiseaseRequests = async (req, res) => {
   try {
-    const diseaseRequests = await DiseaseRequest.find();
-    res.status(200).json(diseaseRequests);
+    const requests = await DiseaseRequest.find();
+    const escapeRegExp = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const pending = [];
+    for (const r of requests) {
+      const nameRegex = new RegExp(`^${escapeRegExp(r.name)}$`, 'i');
+      const existing = await Disease.findOne({ name: nameRegex, approved: true });
+      if (!existing) {
+        pending.push(r);
+        continue;
+      }
+      // If all requested affected areas already present in approved disease, skip
+      const existingAreas = (existing.affectedAreas || []).map(a => String(a).toLowerCase());
+      const allIncluded = (r.affectedAreas || []).every(a => existingAreas.includes(String(a).toLowerCase()));
+      if (!allIncluded) pending.push(r);
+    }
+
+    res.status(200).json(pending);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

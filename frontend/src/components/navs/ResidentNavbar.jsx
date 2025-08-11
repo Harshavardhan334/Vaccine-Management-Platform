@@ -31,7 +31,7 @@ const ResidentNavbar = () => {
           </NavLink>
         </div>
         <NavLink
-          to="/resident/account"
+          to="/account"
           className={({ isActive }) =>
             isActive
               ? "bg-black text-white px-6 py-2 rounded-full shadow-md"

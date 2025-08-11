@@ -1,10 +1,19 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const AdminNavbar = () => {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   const linkClass = ({ isActive }) =>
     isActive
       ? "text-black border-b-2 border-black px-3 py-2"
       : "text-gray-700 hover:text-black px-3 py-2";
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const q = searchTerm.trim();
+    navigate(q ? `/admin/requests?q=${encodeURIComponent(q)}` : "/admin/requests");
+  };
 
   return (
     <nav className="bg-white">
@@ -30,6 +39,10 @@ const AdminNavbar = () => {
           <NavLink to="/admin/requests" className={linkClass}>
             Requests
           </NavLink>
+          <NavLink to="/admin/search" className={linkClass}>
+            Search
+          </NavLink>
+          
         </div>
         <NavLink
           to="/account"

@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const SearchBar = ({ setVaccines }) => {
+const SearchBar = ({ setVaccines, setDiseases, mode = 'resident' }) => {
   const [search, setSearch] = useState('');
 
   const handleSearch = async () => {
     if (search.trim() === '') return;
 
     try {
-      const response = await axios.get(`http://localhost:4000/api/resident/vaccines/location/${encodeURIComponent(search)}`, { withCredentials: true });
-      console.log("Fetched Data:", response.data);
-
-      setVaccines(Array.isArray(response.data) ? response.data : [response.data]);
+      const base = mode === 'admin' ? 'http://localhost:4000/api/admin' : 'http://localhost:4000/api/resident';
+      const response = await axios.get(`${base}/vaccines/location/${encodeURIComponent(search)}`, { withCredentials: true });
+      const data = response.data;
+      const vaccines = Array.isArray(data?.vaccines) ? data.vaccines : [];
+      const diseases = Array.isArray(data?.diseases) ? data.diseases : [];
+      setVaccines(vaccines);
+      if (setDiseases) setDiseases(diseases);
     } catch (error) {
       console.error("Error fetching vaccines:", error);
       setVaccines([]);

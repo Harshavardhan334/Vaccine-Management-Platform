@@ -17,6 +17,7 @@ import {
   getAllDiseases,
   getAllVaccines,
 } from "../Controllers/Admin.js";
+import { getVaccinesByLocation } from "../Controllers/Resident.js";
 
 const router = express.Router();
 
@@ -59,6 +60,9 @@ router.put("/diseases/:id", editDisease);
 // Routes to fetch pending requests
 router.get("/vaccines/requests", getVaccineRequests);
 router.get("/diseases/requests", getDiseaseRequests);
+
+// Search vaccines by location (admin access)
+router.get("/vaccines/location/:location", getVaccinesByLocation);
 
 // Optional: Routes to fetch all approved entities
 router.get("/vaccines", getAllVaccines);

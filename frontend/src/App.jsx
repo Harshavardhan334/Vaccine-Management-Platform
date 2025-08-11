@@ -8,9 +8,9 @@ import AuthProvider, { useAuth } from "./components/Auth.jsx";
 import SearchPage from "./pages/resident/SearchPage";
 import AddVaccineResidentPage from "./pages/resident/AddVaccineResidentPage";
 import AddDiseaseResidentPage from "./pages/resident/AddDiseaseResidentPage"
-import PendingVaccinesPage from "./pages/admin/PendingVaccinesPage.jsx";
-import PendingDiseasesPage from "./pages/admin/PendingDiseasesPage.jsx";
+import RequestsPage from "./pages/admin/RequestsPage.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import AdminSearchPage from "./pages/admin/SearchPage.jsx";
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
@@ -33,14 +33,14 @@ const App = () => {
               <AdminDashboard />
             </ProtectedRoute>
           } />
-          <Route path="/admin/requests" element={
+          <Route path="/admin/search" element={
             <ProtectedRoute roles={["admin"]}>
-              <PendingVaccinesPage />
+              <AdminSearchPage />
             </ProtectedRoute>
           } />
-          <Route path="/admin/requests/diseases" element={
+          <Route path="/admin/requests" element={
             <ProtectedRoute roles={["admin"]}>
-              <PendingDiseasesPage />
+              <RequestsPage />
             </ProtectedRoute>
           } />
           <Route

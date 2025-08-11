@@ -3,7 +3,8 @@ import { isAuthenticated, authorizeRoles } from "../Middlewares/auth.js";
 import {
   getVaccinesByLocation,
   addDiseaseReq,
-  addVaccineReq
+  addVaccineReq,
+  getAllDiseases
 } from "../Controllers/Resident.js";
 
 const router = express.Router();
@@ -18,5 +19,8 @@ router.post("/diseases", addDiseaseReq);
 
 // Route to add a new vaccine request
 router.post("/vaccines", addVaccineReq);
+
+// Route to fetch approved diseases (for autocomplete)
+router.get("/diseases", getAllDiseases);
 
 export default router;

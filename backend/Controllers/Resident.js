@@ -7,25 +7,24 @@ import DiseaseRequest from "../Models/diseaseReq.js";
 export const getVaccinesByLocation = async (req, res) => {
     try {
       const { location } = req.method === 'GET' ? req.params : req.body;
+
+      const escapeRegExp = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const trimmed = String(location || '').trim();
+      const locRegex = new RegExp(`^${escapeRegExp(trimmed)}$`, 'i');
   
-      // Fetch diseases associated with the location
-      const diseases = await Disease.find({ affectedAreas: location, approved: true});
-  
-      if (diseases.length === 0) {
-        return res.status(404).json({ message: "No diseases found for this location" });
-      }
+      // Fetch diseases associated with the location (case-insensitive)
+      const diseases = await Disease.find({ affectedAreas: locRegex, approved: true});
+
       // Get the IDs of diseases
       const diseaseIds = diseases.map(disease => disease._id);
-      console.log("Disease IDs:", diseaseIds.map(id => id.toString()));
 
       // Fetch vaccines that cover these diseases
-      const vaccines = await Vaccine.find({ diseasesCovered: { $in: diseaseIds }, approved: true });
+      const vaccines = diseaseIds.length > 0
+        ? await Vaccine.find({ diseasesCovered: { $in: diseaseIds }, approved: true })
+        : [];
 
-      if (vaccines.length === 0) {
-        return res.status(404).json({ message: "No vaccines found for the diseases in this location" });
-      }
-  
-      res.status(200).json(vaccines);
+      // Always return 200 with arrays; frontend can show empty states
+      res.status(200).json({ diseases, vaccines });
     } catch (error) {
       res.status(500).json({ message: "Server error", error });
     }
@@ -67,24 +66,30 @@ export const addVaccineReq = async (req, res) => {
   try {
     const { name, description, diseasesCovered, recommendedAge, dosesRequired, sideEffects } = req.body;
 
-    // Check if the vaccine already exists with the same diseasesCovered
-    const existingVaccine = await Vaccine.findOne({
-      name,
-      diseasesCovered: { $all: diseasesCovered}
-    });
+    // Normalize disease names and fetch ObjectIds (only approved diseases)
+    const escapeRegExp = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const normalizedNames = Array.isArray(diseasesCovered)
+      ? diseasesCovered.map(n => String(n).trim()).filter(Boolean)
+      : [];
+    const nameRegexes = normalizedNames.map(n => new RegExp(`^${escapeRegExp(n)}$`, 'i'));
 
-    if (existingVaccine) {
-      return res.status(400).json({ message: "Vaccine with the same diseases covered already exists" });
-    }
-
-    // Fetch ObjectIds for diseasesCovered (only approved diseases)
-    const diseases = await Disease.find({ name: { $in: diseasesCovered }, approved: true }, "_id");
+    const diseases = await Disease.find({ name: { $in: nameRegexes }, approved: true }, "_id name");
 
     if (diseases.length === 0) {
       return res.status(400).json({ message: "No valid diseases found" });
     }
 
     const diseaseIds = diseases.map(disease => disease._id);
+
+    // Check if a vaccine already exists with the same name and covers at least these diseases
+    const existingVaccine = await Vaccine.findOne({
+      name: new RegExp(`^${escapeRegExp(name)}$`, 'i'),
+      diseasesCovered: { $all: diseaseIds }
+    });
+
+    if (existingVaccine) {
+      return res.status(400).json({ message: "Vaccine with the same diseases covered already exists" });
+    }
 
     // Create a new vaccine request
     const newVaccine = new VaccineRequest({
@@ -108,7 +113,7 @@ export const addVaccineReq = async (req, res) => {
 // Get all diseases
 export const getAllDiseases = async (req, res) => {
   try {
-    const diseases = await Disease.find();
+    const diseases = await Disease.find({ approved: true });
     res.status(200).json(diseases);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

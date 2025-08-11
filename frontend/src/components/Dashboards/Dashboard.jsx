@@ -3,7 +3,7 @@ import { useAuth } from "../Auth.jsx";
 import { ChevronRight, ChevronDown, LogOut, User, Pencil } from "lucide-react";
 
 const Dashboard = () => {
-  const { user, setUser } = useAuth();
+  const { user, setUser, logout } = useAuth();
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -72,7 +72,7 @@ const Dashboard = () => {
                 </div>
                 <ChevronRight size={18} className="text-gray-400" />
               </button>
-              <button className="w-full flex items-center gap-3 py-2 hover:bg-gray-100 px-3 rounded-lg">
+              <button onClick={logout} className="w-full flex items-center gap-3 py-2 hover:bg-gray-100 px-3 rounded-lg">
                 <LogOut size={18} className="text-gray-500" />
                 <span className="text-sm">Log Out</span>
               </button>
