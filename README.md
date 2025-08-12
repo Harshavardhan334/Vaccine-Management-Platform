@@ -78,7 +78,3 @@ Open `http://localhost:5173` in your browser.
 
 ## Contributing
 PRs are welcome. Please open an issue to discuss significant changes.
-
-## License
-MIT
-
