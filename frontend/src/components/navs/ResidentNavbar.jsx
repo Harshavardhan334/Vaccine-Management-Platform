@@ -29,6 +29,9 @@ const ResidentNavbar = () => {
           <NavLink to="/resident/search" className={linkClass}>
             Search
           </NavLink>
+          <NavLink to="/resident/appointments" className={linkClass}>
+            Appointments
+          </NavLink>
         </div>
         <NavLink
           to="/account"

@@ -21,7 +21,7 @@ const SearchPage = () => {
       <div className='px-4'>
         <h2 className='text-2xl font-semibold mt-4'>Vaccines Available</h2>
       </div>
-      <VaccineList vaccines={vaccines} />
+      <VaccineList vaccines={vaccines} showSchedule={true} />
     </div>
   </>
   );

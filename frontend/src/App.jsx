@@ -11,6 +11,7 @@ import AddDiseaseResidentPage from "./pages/resident/AddDiseaseResidentPage"
 import RequestsPage from "./pages/admin/RequestsPage.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminSearchPage from "./pages/admin/SearchPage.jsx";
+import AppointmentsPage from "./pages/resident/AppointmentsPage.jsx";
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
@@ -64,6 +65,14 @@ const App = () => {
             element={
               <ProtectedRoute roles={["resident"]}>
                 <AddDiseaseResidentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resident/appointments"
+            element={
+              <ProtectedRoute roles={["resident"]}>
+                <AppointmentsPage />
               </ProtectedRoute>
             }
           />

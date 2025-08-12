@@ -4,7 +4,13 @@ import {
   getVaccinesByLocation,
   addDiseaseReq,
   addVaccineReq,
-  getAllDiseases
+  getAllDiseases,
+  getApprovedVaccines,
+  createAppointment,
+  listMyAppointments,
+  cancelAppointment,
+  rescheduleAppointment,
+  updateAppointmentStatus
 } from "../Controllers/Resident.js";
 
 const router = express.Router();
@@ -22,5 +28,14 @@ router.post("/vaccines", addVaccineReq);
 
 // Route to fetch approved diseases (for autocomplete)
 router.get("/diseases", getAllDiseases);
+// Route to fetch approved vaccines (for dropdowns)
+router.get("/vaccines", getApprovedVaccines);
+
+// Appointments
+router.post("/appointments", createAppointment);
+router.get("/appointments", listMyAppointments);
+router.put("/appointments/:id", rescheduleAppointment);
+router.delete("/appointments/:id", cancelAppointment);
+router.put("/appointments/:id/status", updateAppointmentStatus);
 
 export default router;

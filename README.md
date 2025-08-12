@@ -7,6 +7,9 @@ Full-stack MERN app for disease and vaccine tracking with role-based access (Res
 - Resident
   - Submit disease and vaccine requests
   - Search vaccines by location
+  - Schedule vaccine appointments (enforced to dates after today)
+  - Reschedule (sets status back to scheduled), cancel, and mark as completed
+  - View Upcoming, Completed, and Canceled appointments on Home
 - Admin
   - Review/approve disease and vaccine requests
   - Manage diseases (affected areas) and vaccines (covered diseases)
@@ -52,10 +55,22 @@ Open `http://localhost:5173` in your browser.
   - `POST /api/resident/diseases` (request)
   - `POST /api/resident/vaccines` (request)
   - `GET /api/resident/vaccines/location/:location` (search)
+  - `GET /api/resident/vaccines` (list approved vaccines)
+  - `POST /api/resident/appointments` (create; date must be after today)
+  - `GET /api/resident/appointments` (list my appointments)
+  - `PUT /api/resident/appointments/:id` (reschedule; sets status to scheduled, date must be after today)
+  - `DELETE /api/resident/appointments/:id` (cancel; sets status to canceled)
+  - `PUT /api/resident/appointments/:id/status` (update status: scheduled | completed | canceled)
 - Admin (auth, role admin):
   - Requests: `GET /api/admin/diseases/requests`, `PUT /api/admin/diseases/approve/:id`
   - Requests: `GET /api/admin/vaccines/requests`, `PUT /api/admin/vaccines/approve/:id`
   - Manage: `PUT /api/admin/diseases/:id`, `PUT /api/admin/vaccines/:id`
+
+## UI Overview (selected)
+- Resident
+  - Search: `/resident/search` – find vaccines by location
+  - Appointments: `/resident/appointments` – schedule, reschedule (modal), cancel, mark completed
+  - Home: `/` – shows Upcoming, Completed, and Canceled appointments
 
 ## Scripts
 - Backend: `npm run dev` (nodemon), `npm start`
