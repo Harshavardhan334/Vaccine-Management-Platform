@@ -1,36 +1,75 @@
+
+
 # Vaccine Management Platform
 
-Full-stack MERN app for disease and vaccine tracking with role-based access (Resident/Admin), approval workflows, and cookie-based JWT auth.
+> A modern full-stack web application for managing vaccines, diseases, and appointments, featuring an agentic chatbot for intelligent user support.
 
-## Features
-- Auth and roles: Resident and Admin, cookie JWT, protected routes
-- Resident
-  - Submit disease and vaccine requests
-  - Search vaccines by location
-  - Schedule vaccine appointments (enforced to dates after today)
-  - Reschedule (sets status back to scheduled), cancel, and mark as completed
-  - View Upcoming, Completed, and Canceled appointments on Home
-- Admin
-  - Review/approve disease and vaccine requests
-  - Manage diseases (affected areas) and vaccines (covered diseases)
+---
 
-## Tech Stack
-- Frontend: React, React Router, Tailwind CSS, Axios, Vite
-- Backend: Node, Express, Mongoose, CORS, cookie-parser, dotenv, JWT
-- DB: MongoDB
+## 🚀 Features
 
-## Local Setup
-Prereqs: Node 18+, MongoDB Atlas URI
+- **User Authentication & Roles**: Secure login and registration for Admin and Resident roles, with JWT-based session management.
+- **Vaccine & Disease Management**: Residents can request new vaccines/diseases; Admins review, approve, and manage all records.
+- **Appointment Scheduling**: Residents schedule, reschedule, cancel, and complete vaccine appointments (future dates only).
+- **Approval Workflows**: All new vaccine/disease requests require admin approval before being available to users.
+- **Search & Filter**: Residents can search vaccines by location and filter available options.
+- **Notification System**: Users receive notifications for important actions (e.g., approvals, appointment status changes).
+- **Agentic Chatbot**: An intelligent, context-aware chatbot assists users with platform navigation, vaccine/disease info, and general queries.
+- **Role-Based Access Control**: Actions and routes are protected based on user roles.
+- **Modern UI**: Responsive, user-friendly interface built with React and Tailwind CSS.
 
-1) Backend
-```bash
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, Vite, Tailwind CSS
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Mongoose)
+
+---
+
+## 📁 Folder Structure
+
+```
+Vaccine-Management-Platform/
+├── backend/         # Express.js backend API
+│   ├── Controllers/
+│   ├── Database/
+│   ├── Middlewares/
+│   ├── Models/
+│   ├── Routes/
+│   ├── app.js
+│   ├── server.js
+│   └── ...
+├── frontend/        # React frontend app
+│   ├── src/
+│   ├── public/
+│   ├── index.html
+│   └── ...
+├── package.json     # Project metadata
+└── README.md        # Project documentation
+```
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm or yarn
+- MongoDB instance (local or Atlas)
+
+### Backend Setup
+```sh
 cd backend
 npm install
-cp config/config.env.example config/config.env # or set your own values
+cp config/config.example.env config/config.env # Edit values as needed
+# (Optional) Seed the database:
+node seed.js
 npm run dev
 ```
 
-Required `backend/config/config.env` values:
+**Required `backend/config/config.env` values:**
 ```
 PORT=4000
 FRONTEND_URL=http://localhost:5173
@@ -40,41 +79,75 @@ JWT_EXPIRE=10d
 COOKIE_EXPIRE=5
 ```
 
-2) Frontend
-```bash
+### Frontend Setup
+```sh
 cd frontend
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## API Overview (selected)
-- Users: `POST /api/users` (register), `POST /api/users/login`, `POST /api/users/logout`, `PUT /api/users` (self update)
-- Resident (auth, role resident):
+---
+
+## 🧑‍💻 Usage
+
+- Register as a Resident or login as Admin.
+- Residents can request new vaccines/diseases, schedule appointments, and interact with the agentic chatbot for help.
+- Admins review/approve requests and manage all records.
+- Use the chatbot (`/chatbot` route) for intelligent, context-aware assistance.
+
+---
+
+## 📚 API Overview (Selected)
+
+- **Users:**
+  - `POST /api/users` (register)
+  - `POST /api/users/login`
+  - `POST /api/users/logout`
+  - `PUT /api/users` (self update)
+- **Resident:**
   - `POST /api/resident/diseases` (request)
   - `POST /api/resident/vaccines` (request)
   - `GET /api/resident/vaccines/location/:location` (search)
   - `GET /api/resident/vaccines` (list approved vaccines)
-  - `POST /api/resident/appointments` (create; date must be after today)
+  - `POST /api/resident/appointments` (create)
   - `GET /api/resident/appointments` (list my appointments)
-  - `PUT /api/resident/appointments/:id` (reschedule; sets status to scheduled, date must be after today)
-  - `DELETE /api/resident/appointments/:id` (cancel; sets status to canceled)
-  - `PUT /api/resident/appointments/:id/status` (update status: scheduled | completed | canceled)
-- Admin (auth, role admin):
-  - Requests: `GET /api/admin/diseases/requests`, `PUT /api/admin/diseases/approve/:id`
-  - Requests: `GET /api/admin/vaccines/requests`, `PUT /api/admin/vaccines/approve/:id`
-  - Manage: `PUT /api/admin/diseases/:id`, `PUT /api/admin/vaccines/:id`
+  - `PUT /api/resident/appointments/:id` (reschedule)
+  - `DELETE /api/resident/appointments/:id` (cancel)
+  - `PUT /api/resident/appointments/:id/status` (update status)
+- **Admin:**
+  - `GET /api/admin/diseases/requests`, `PUT /api/admin/diseases/approve/:id`
+  - `GET /api/admin/vaccines/requests`, `PUT /api/admin/vaccines/approve/:id`
+  - `PUT /api/admin/diseases/:id`, `PUT /api/admin/vaccines/:id`
 
-## UI Overview (selected)
-- Resident
+---
+
+## 🖥️ UI Overview
+
+- **Resident:**
   - Search: `/resident/search` – find vaccines by location
-  - Appointments: `/resident/appointments` – schedule, reschedule (modal), cancel, mark completed
-  - Home: `/` – shows Upcoming, Completed, and Canceled appointments
+  - Appointments: `/resident/appointments` – schedule, reschedule, cancel, mark completed
+  - Home: `/` – view Upcoming, Completed, and Canceled appointments
+  - Chatbot: `/chatbot` – access the agentic chatbot for help, guidance, and platform information
+- **Admin:**
+  - Dashboard: `/admin` – manage requests, diseases, and vaccines
 
-## Scripts
-- Backend: `npm run dev` (nodemon), `npm start`
-- Frontend: `npm run dev`, `npm run build`, `npm run preview`
+---
 
-## Contributing
-PRs are welcome. Please open an issue to discuss significant changes.
+## 📜 Scripts
+
+- **Backend:** `npm run dev` (nodemon), `npm start`
+- **Frontend:** `npm run dev`, `npm run build`, `npm run preview`
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open issues or submit pull requests for improvements and bug fixes.
+
+---
+
+## 📝 License
+
+This project is licensed under the [MIT License](LICENSE).
