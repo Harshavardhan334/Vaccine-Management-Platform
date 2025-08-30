@@ -110,7 +110,7 @@ export const approveVaccine = async (req, res) => {
       // Update the existing vaccine with new diseases
       existingVaccine.diseasesCovered.push(...newDiseases);
       await existingVaccine.save();
-      await vaccineReq.remove();
+      await vaccineReq.deleteOne();
       return res.status(200).json({ message: "Vaccine updated with new diseases", vaccine: existingVaccine });
     }
 
@@ -128,7 +128,7 @@ export const approveVaccine = async (req, res) => {
     });
 
     await newVaccine.save();
-    await vaccineReq.remove();
+    await vaccineReq.deleteOne();
 
     res.status(200).json({ message: "Vaccine approved", vaccine: newVaccine });
   } catch (error) {
@@ -173,7 +173,7 @@ export const approveDisease = async (req, res) => {
       // Update the existing disease with new affected areas
       existingDisease.affectedAreas.push(...newAffectedAreas);
       await existingDisease.save();
-      await diseaseReq.remove();
+      await diseaseReq.deleteOne();
       return res.status(200).json({ message: "Disease updated with new affected areas", disease: existingDisease });
     }
 
@@ -188,7 +188,7 @@ export const approveDisease = async (req, res) => {
     });
 
     await newDisease.save();
-    await diseaseReq.remove();
+    await diseaseReq.deleteOne();
 
     res.status(200).json({ message: "Disease approved", disease: newDisease });
   } catch (error) {

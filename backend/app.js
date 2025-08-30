@@ -8,6 +8,7 @@ import { errorMiddleware } from "./Middlewares/error.js";
 import userRoutes from "./Routes/userRoutes.js";  // Import user routes
 import adminRoutes from "./Routes/adminRoutes.js";  // Import admin routes
 import residentRoutes from "./Routes/residentRoutes.js";  // Import resident routes
+import chatbotRoutes from "./Routes/chatbotRoutes.js";  // Import chatbot routes
 
 const app = express();
 config({ path: "./config/config.env" });
@@ -35,6 +36,7 @@ dbConnection();
 app.use("/api/users", userRoutes);  // User-related routes
 app.use("/api/admin", adminRoutes);  // Admin-related routes
 app.use("/api/resident", residentRoutes);  // Resident-related routes
+app.use("/api/chatbot", chatbotRoutes);  // Chatbot-related routes
 
 // Error middleware
 app.use(errorMiddleware);

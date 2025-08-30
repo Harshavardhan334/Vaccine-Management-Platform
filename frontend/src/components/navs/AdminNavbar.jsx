@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const AdminNavbar = () => {
@@ -20,10 +20,10 @@ const AdminNavbar = () => {
       <div className="bg-cta h-1 w-full"></div>
       <div className="py-4 px-8 flex justify-between items-center">
         <div className="text-2xl font-bold">
-          <Link to="/" className={linkClass}>
+          <NavLink to="/" className={linkClass}>
             <span className="text-black">EpiSheild</span>
             <span className="text-cta">.</span>
-          </Link>
+          </NavLink>
 
         </div>
         <div className="flex space-x-6 items-center text-lg">
@@ -32,9 +32,6 @@ const AdminNavbar = () => {
           </NavLink>
           <NavLink to="/about" className={linkClass}>
             About us
-          </NavLink>
-          <NavLink to="/contact" className={linkClass}>
-            Contact us
           </NavLink>
           <NavLink to="/admin/requests" className={linkClass}>
             Requests

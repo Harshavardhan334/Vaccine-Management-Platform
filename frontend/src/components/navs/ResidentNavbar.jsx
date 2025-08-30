@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const ResidentNavbar = () => {
   const linkClass = ({ isActive }) =>
@@ -11,10 +11,10 @@ const ResidentNavbar = () => {
       <div className="bg-cta h-1 w-full"></div>
       <div className="py-4 px-8 flex justify-between items-center">
         <div className="text-2xl font-bold">
-          <Link to="/" className={linkClass}>
+          <NavLink to="/" className={linkClass}>
             <span className="text-black">EpiShield</span>
             <span className="text-cta">.</span>
-          </Link>
+          </NavLink>
         </div>
         <div className="flex space-x-6 items-center text-lg">
           <NavLink to="/" className={linkClass}>

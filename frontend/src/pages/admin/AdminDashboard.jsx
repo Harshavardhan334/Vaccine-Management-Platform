@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import { BACKEND_URL } from '../../config.js'
 import AdminNavbar from '../../components/navs/AdminNavbar.jsx'

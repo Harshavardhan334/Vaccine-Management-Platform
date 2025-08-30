@@ -3,7 +3,9 @@ import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Account from "./pages/Account";
+import ChatbotPage from "./pages/ChatbotPage";
 import AuthProvider, { useAuth } from "./components/Auth.jsx";
+import Chatbot from "./components/Chatbot.jsx";
 
 import SearchPage from "./pages/resident/SearchPage";
 import AddVaccineResidentPage from "./pages/resident/AddVaccineResidentPage";
@@ -29,6 +31,7 @@ const App = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
           <Route path="/admin" element={
             <ProtectedRoute roles={["admin"]}>
               <AdminDashboard />
@@ -77,6 +80,7 @@ const App = () => {
             }
           />
         </Routes>
+        <Chatbot />
       </Router>
     </AuthProvider>
   );
